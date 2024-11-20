@@ -32,6 +32,7 @@ class FootballGameTest {
             Arguments.of("HomeTeamNull", null, "Slovenia"),
             Arguments.of("AwayTeamNull", "Slovenia", null),
             Arguments.of("BothTeamsNull", null, null),
+            Arguments.of("BothTeamsAreBlank", "   ", "         "),
             Arguments.of("InvalidCharactersHomeTeam", "Slo%Venia", "Italia"),
             Arguments.of("InvalidCharactersAwayTeam", "Slovenia", "Ital;i")
         );

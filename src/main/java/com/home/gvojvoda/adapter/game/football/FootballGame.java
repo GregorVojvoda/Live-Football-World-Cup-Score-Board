@@ -1,8 +1,6 @@
 package com.home.gvojvoda.adapter.game.football;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
 
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.port.Game;
@@ -22,24 +20,12 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest>{
     private boolean finish;
 
     public FootballGame(String homeTeam, String awayTeam) throws GameException {
-        validateTeamName(homeTeam);
-        validateTeamName(awayTeam);
         this.matchStart = LocalDateTime.now();
-        this.homeTeamName = modifyTeamName(homeTeam);
-        this.awayTeamName = modifyTeamName(awayTeam);
+        this.homeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeam);
+        this.awayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeam);
         this.homeScore = 0;
         this.awayScore = 0;
         this.finish = false;
-    }
-
-    private String modifyTeamName(String teamName) {
-        return teamName.trim().replaceAll("\\s+", "_").toUpperCase();
-    }
-
-    private void validateTeamName(String teamName) throws GameException{
-        if(Objects.isNull(teamName)) throw new GameException("Team Name cannot be null");
-        Pattern patter = Pattern.compile(TEAM_NAME_VALIDATION_REGEXP);
-        if(!patter.matcher(teamName).matches()) throw new GameException("Team name contains invalid characters"); 
     }
 
     public void finishMatch() {
