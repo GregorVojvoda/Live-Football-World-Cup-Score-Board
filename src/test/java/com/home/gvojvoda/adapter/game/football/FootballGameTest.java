@@ -1,4 +1,4 @@
-package com.home.gvojvoda.model;
+package com.home.gvojvoda.adapter.game.football;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,17 +13,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.home.gvojvoda.exception.MatchException;
+import com.home.gvojvoda.domain.exception.GameException;
 
-class MatchTest {
+class FootballGameTest {
 
     // Match initialization
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("matchesWithInvalidNames")
     void matchInit_KO_invalidNames(String testName, String homeTeam, String awaiTeam) {
-        assertThrows(MatchException.class, () -> {
-            new Match(homeTeam, awaiTeam);
+        assertThrows(GameException.class, () -> {
+            new FootballGame(homeTeam, awaiTeam);
         });
     }
 
@@ -39,9 +39,9 @@ class MatchTest {
 
     @ParameterizedTest(name = "{0} & {2}")
     @MethodSource("matchesWithValidTeamNames")
-    void matchInit_OK(String providedHomeName, String finalHomeName, String providedAwayName, String finalAwayName) throws MatchException {
+    void matchInit_OK(String providedHomeName, String finalHomeName, String providedAwayName, String finalAwayName) throws GameException {
         // Given When
-        Match match = new Match(providedHomeName, providedAwayName);
+        FootballGame match = new FootballGame(providedHomeName, providedAwayName);
 
         // Then 
         assertEquals(finalHomeName, match.getHomeTeamName());
@@ -63,9 +63,9 @@ class MatchTest {
     // FinishMatch
 
     @Test
-    void finishMatch_OK() throws MatchException {
+    void finishMatch_OK() throws GameException {
         // Given 
-        Match match = new Match("SLO", "ITA");
+        FootballGame match = new FootballGame("SLO", "ITA");
         match.finishMatch();
         assertTrue(match.isFinish());
     }
@@ -73,35 +73,35 @@ class MatchTest {
     // Update Score
 
     @Test
-    void updateScore_KO_machIsOver() throws MatchException {
+    void updateScore_KO_machIsOver() throws GameException {
         // Given
-        Match match = new Match("SLO", "ITA");
+        FootballGame match = new FootballGame("SLO", "ITA");
         match.finishMatch();
         // Then
-        assertThrows(MatchException.class, () -> match.updateScore(1, 1));
+        assertThrows(GameException.class, () -> match.updateScore(new FootballGameScoreUpdateRequest(1, 1)));
     }
 
     @ParameterizedTest
     @MethodSource("negativeScoreCombiationions")
-    void updateScore_KO_scoreIsNegative(int updatedHomeScore, int updatedAwayScore) throws MatchException {
+    void updateScore_KO_scoreIsNegative(FootballGameScoreUpdateRequest request) throws GameException {
         // Given
-        Match match = new Match("SLO", "ITA");
+        FootballGame match = new FootballGame("SLO", "ITA");
         // Then
-        assertThrows(MatchException.class, () -> match.updateScore(updatedHomeScore, updatedAwayScore));
+        assertThrows(GameException.class, () -> match.updateScore(request));
     }
 
     private static Stream<Arguments> negativeScoreCombiationions(){
         return Stream.of(
-            Arguments.of(0, -1),
-            Arguments.of(-1, 0),
-            Arguments.of(-1, -1)
+            Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
+            Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
+            Arguments.of(new FootballGameScoreUpdateRequest(-1, -1))
         );
     }
 
     @Test
-    void updateScore_OK() throws MatchException {
-        Match match = new Match("SLO", "ITA");
-        match.updateScore(2, 3);
+    void updateScore_OK() throws GameException {
+        FootballGame match = new FootballGame("SLO", "ITA");
+        match.updateScore(new FootballGameScoreUpdateRequest(2, 3));
         assertEquals(2, match.getHomeScore());
         assertEquals(3, match.getAwayScore());
     }
