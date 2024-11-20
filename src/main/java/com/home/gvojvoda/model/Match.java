@@ -45,4 +45,11 @@ public class Match {
     public void finishMatch() {
         this.finish = true;
     }
+
+    public void updateScore(int updatedHomeTeamScore, int updatedAwayTeamScore) throws MatchException {
+        if(this.finish) throw new MatchException("Finished match score cannot be modified");
+        if(updatedHomeTeamScore < 0 || updatedAwayTeamScore < 0) throw new MatchException("Score value cannot be negative");
+        this.homeScore = updatedHomeTeamScore;
+        this.awayScore = updatedAwayTeamScore;
+    }
 }

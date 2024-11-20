@@ -17,6 +17,8 @@ import com.home.gvojvoda.exception.MatchException;
 
 class MatchTest {
 
+    // Match initialization
+
     @ParameterizedTest(name = "{0}")
     @MethodSource("matchesWithInvalidNames")
     void matchInit_KO_invalidNames(String testName, String homeTeam, String awaiTeam) {
@@ -58,12 +60,50 @@ class MatchTest {
         );
     }
 
+    // FinishMatch
+
     @Test
-    void finishMath_OK() throws MatchException {
+    void finishMatch_OK() throws MatchException {
         // Given 
         Match match = new Match("SLO", "ITA");
         match.finishMatch();
         assertTrue(match.isFinish());
+    }
+
+    // Update Score
+
+    @Test
+    void updateScore_KO_machIsOver() throws MatchException {
+        // Given
+        Match match = new Match("SLO", "ITA");
+        match.finishMatch();
+        // Then
+        assertThrows(MatchException.class, () -> match.updateScore(1, 1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("negativeScoreCombiationions")
+    void updateScore_KO_scoreIsNegative(int updatedHomeScore, int updatedAwayScore) throws MatchException {
+        // Given
+        Match match = new Match("SLO", "ITA");
+        // Then
+        assertThrows(MatchException.class, () -> match.updateScore(updatedHomeScore, updatedAwayScore));
+    }
+
+    private static Stream<Arguments> negativeScoreCombiationions(){
+        return Stream.of(
+            Arguments.of(0, -1),
+            Arguments.of(-1, 0),
+            Arguments.of(-1, -1)
+        );
+    }
+
+    @Test
+    void updateScore_OK() throws MatchException {
+        Match match = new Match("SLO", "ITA");
+        match.updateScore(2, 3);
+        assertEquals(2, match.getHomeScore());
+        assertEquals(3, match.getAwayScore());
     }
 
     
