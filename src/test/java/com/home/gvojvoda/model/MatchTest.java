@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,7 +21,7 @@ class MatchTest {
     @MethodSource("matchesWithInvalidNames")
     void matchInit_KO_invalidNames(String testName, String homeTeam, String awaiTeam) {
         assertThrows(MatchException.class, () -> {
-            Match.init(homeTeam, awaiTeam);
+            new Match(homeTeam, awaiTeam);
         });
     }
 
@@ -37,14 +39,14 @@ class MatchTest {
     @MethodSource("matchesWithValidTeamNames")
     void matchInit_OK(String providedHomeName, String finalHomeName, String providedAwayName, String finalAwayName) throws MatchException {
         // Given When
-        Match match = Match.init(providedHomeName, providedAwayName);
+        Match match = new Match(providedHomeName, providedAwayName);
 
         // Then 
         assertEquals(finalHomeName, match.getHomeTeamName());
         assertEquals(finalAwayName, match.getAwayTeamName());
         assertEquals(0, match.getHomeScore());
         assertEquals(0, match.getAwayScore());
-        assertFalse(match.isEnded());
+        assertFalse(match.isFinish());
         assertNotNull(match.getMatchStart());
     }
 
@@ -54,6 +56,14 @@ class MatchTest {
             Arguments.of("Slovenia 1", "SLOVENIA_1", "Italia       1", "ITALIA_1"),
             Arguments.of("SLOVENIA_01", "SLOVENIA_01", "ITA    LIA 01", "ITA_LIA_01")
         );
+    }
+
+    @Test
+    void finishMath_OK() throws MatchException {
+        // Given 
+        Match match = new Match("SLO", "ITA");
+        match.finishMatch();
+        assertTrue(match.isFinish());
     }
 
     

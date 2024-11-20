@@ -18,31 +18,31 @@ public class Match {
     private final String awayTeamName;
     private int homeScore;
     private int awayScore;
-    private boolean ended;
+    private boolean finish;
 
-    private Match(String homeTeam, String awayTeam) {
-        this.matchStart = LocalDateTime.now();
-        this.homeTeamName = homeTeam;
-        this.awayTeamName = awayTeam;
-        this.homeScore = 0;
-        this.awayScore = 0;
-        this.ended = false;
-    }
-
-    public static Match init(String homeTeam, String awayTeam) throws MatchException {
+    public Match(String homeTeam, String awayTeam) throws MatchException {
         validateTeamName(homeTeam);
         validateTeamName(awayTeam);
-        return new Match(modifyTeamName(homeTeam), modifyTeamName(awayTeam));
+        this.matchStart = LocalDateTime.now();
+        this.homeTeamName = modifyTeamName(homeTeam);
+        this.awayTeamName = modifyTeamName(awayTeam);
+        this.homeScore = 0;
+        this.awayScore = 0;
+        this.finish = false;
     }
 
-    private static String modifyTeamName(String teamName) {
+    private String modifyTeamName(String teamName) {
         return teamName.trim().replaceAll("\\s+", "_").toUpperCase();
         
     }
 
-    private static void validateTeamName(String teamName) throws MatchException{
+    private void validateTeamName(String teamName) throws MatchException{
         if(Objects.isNull(teamName)) throw new MatchException("Team Name cannot be null");
         Pattern patter = Pattern.compile(TEAM_NAME_VALIDATION_REGEXP);
         if(!patter.matcher(teamName).matches()) throw new MatchException("Team name contains invalid characters"); 
+    }
+
+    public void finishMatch() {
+        this.finish = true;
     }
 }
