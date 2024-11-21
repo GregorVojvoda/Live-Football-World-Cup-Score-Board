@@ -18,9 +18,12 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest>{
     private boolean finish;
 
     public FootballGame(String homeTeam, String awayTeam) throws GameException {
+        String finalHomeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeam);
+        String finalAwayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeam);
+        if(finalHomeTeamName.equals(finalAwayTeamName)) throw new GameException("Team names cannot be equal");
         this.matchStart = LocalDateTime.now();
-        this.homeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeam);
-        this.awayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeam);
+        this.homeTeamName = finalHomeTeamName;
+        this.awayTeamName = finalAwayTeamName;
         this.homeScore = 0;
         this.awayScore = 0;
         this.finish = false;
