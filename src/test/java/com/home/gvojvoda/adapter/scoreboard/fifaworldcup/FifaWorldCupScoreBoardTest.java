@@ -1,34 +1,32 @@
 package com.home.gvojvoda.adapter.scoreboard.fifaworldcup;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-import java.util.stream.Stream;
-
+import com.home.gvojvoda.adapter.game.football.FootballGameScoreUpdateRequest;
+import com.home.gvojvoda.domain.exception.GameException;
+import com.home.gvojvoda.domain.exception.ScoreBoardException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.home.gvojvoda.adapter.game.football.FootballGameScoreUpdateRequest;
-import com.home.gvojvoda.domain.exception.GameException;
-import com.home.gvojvoda.domain.exception.ScoreBoardException;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FifaWorldCupScoreBoardTest {
 
     // initializeGame
     @ParameterizedTest(name = "Invalid team names on initalize {index}")
     @MethodSource("invalidTeamNamePairs")
-    void initializeGame_KO_invalidGameNames(String homeTeamName, String awayTeamName)
-            throws ScoreBoardException, GameException {
+    void initializeGame_KO_invalidGameNames(String homeTeamName, String awayTeamName) {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         assertThrows(GameException.class, () -> scoreBoard.initializeGame(homeTeamName, awayTeamName));
     }
 
     @ParameterizedTest(name = "Team Names already exist {index}")
     @MethodSource("validTeamNamePairsSloItaHun")
-    void initializationgame_KO_teamsAlreadyInGame(String homeTeamName, String awayTeamName)
+    void initializationGame_KO_teamsAlreadyInGame(String homeTeamName, String awayTeamName)
             throws ScoreBoardException, GameException {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("ITA", "SLO");

@@ -1,19 +1,14 @@
 package com.home.gvojvoda.adapter.game.football;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.stream.Stream;
-
+import com.home.gvojvoda.domain.exception.GameException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.home.gvojvoda.domain.exception.GameException;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FootballGameTest {
 
@@ -29,14 +24,14 @@ class FootballGameTest {
 
     private static Stream<Arguments> matchesWithInvalidNames() {
         return Stream.of(
-            Arguments.of("HomeTeamNull", null, "Slovenia"),
-            Arguments.of("AwayTeamNull", "Slovenia", null),
-            Arguments.of("BothTeamsNull", null, null),
-            Arguments.of("BothTeamsAreBlank", "   ", "         "),
-            Arguments.of("InvalidCharactersHomeTeam", "Slo%Venia", "Italia"),
-            Arguments.of("InvalidCharactersAwayTeam", "Slovenia", "Ital;i"),
-            Arguments.of("SameName1", "SLO", "SLO"),
-            Arguments.of("SameName2", "SLO", "   SLO    ")
+                Arguments.of("HomeTeamNull", null, "Slovenia"),
+                Arguments.of("AwayTeamNull", "Slovenia", null),
+                Arguments.of("BothTeamsNull", null, null),
+                Arguments.of("BothTeamsAreBlank", "   ", "         "),
+                Arguments.of("InvalidCharactersHomeTeam", "Slo%Venia", "Italia"),
+                Arguments.of("InvalidCharactersAwayTeam", "Slovenia", "Ital;i"),
+                Arguments.of("SameName1", "SLO", "SLO"),
+                Arguments.of("SameName2", "SLO", "   SLO    ")
         );
     }
 
@@ -57,9 +52,9 @@ class FootballGameTest {
 
     private static Stream<Arguments> matchesWithValidTeamNames() {
         return Stream.of(
-            Arguments.of("    Slovenia    ", "SLOVENIA", "Italia", "ITALIA"),
-            Arguments.of("Slovenia 1", "SLOVENIA_1", "Italia       1", "ITALIA_1"),
-            Arguments.of("SLOVENIA_01", "SLOVENIA_01", "ITA    LIA 01", "ITA_LIA_01")
+                Arguments.of("    Slovenia    ", "SLOVENIA", "Italia", "ITALIA"),
+                Arguments.of("Slovenia 1", "SLOVENIA_1", "Italia       1", "ITALIA_1"),
+                Arguments.of("SLOVENIA_01", "SLOVENIA_01", "ITA    LIA 01", "ITA_LIA_01")
         );
     }
 
@@ -93,14 +88,14 @@ class FootballGameTest {
         assertThrows(GameException.class, () -> match.updateScore(request));
     }
 
-    private static Stream<Arguments> negativeScoreCombiationions(){
+    private static Stream<Arguments> negativeScoreCombiationions() {
         return Stream.of(
-            Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
-            Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
-            Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
-            Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
-            Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
-            Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
+                Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
+                Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
+                Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
+                Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
+                Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
+                Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
         );
     }
 
@@ -123,7 +118,7 @@ class FootballGameTest {
     }
 
     @Test
-    void getTotalScore_OK_withScoreUpdate() throws GameException{
+    void getTotalScore_OK_withScoreUpdate() throws GameException {
         // Given 
         FootballGame game = new FootballGame("ITA", "SLO");
         game.updateScore(new FootballGameScoreUpdateRequest(5, 3));
@@ -135,12 +130,12 @@ class FootballGameTest {
     void getTotalScore_OK_finishedGame() throws GameException {
         // Given
         FootballGame game = new FootballGame("SLO", "ITA");
-        game.updateScore(new FootballGameScoreUpdateRequest(6,6));
+        game.updateScore(new FootballGameScoreUpdateRequest(6, 6));
         game.finishMatch();
         // When Then
         assertEquals(12, game.getOverallScore());
 
     }
 
-    
+
 }

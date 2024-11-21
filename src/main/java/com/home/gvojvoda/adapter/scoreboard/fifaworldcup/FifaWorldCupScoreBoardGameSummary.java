@@ -1,7 +1,6 @@
 package com.home.gvojvoda.adapter.scoreboard.fifaworldcup;
 
 import com.home.gvojvoda.adapter.game.football.FootballGame;
-
 import lombok.Getter;
 
 @Getter
