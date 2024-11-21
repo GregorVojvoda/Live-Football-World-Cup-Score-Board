@@ -12,14 +12,14 @@ import java.util.*;
 public class FifaWorldCupScoreBoard
         implements ScoreBoard<List<FifaWorldCupScoreBoardGameSummary>, FootballGameScoreUpdateRequest> {
 
-    private final Map<String, FootballGame> gameBoard = new HashMap<>();
+    private final Map<String, FootballGame> scoreBoard = new HashMap<>();
 
     @Override
     public void initializeGame(String homeTeamName, String awayTeamName) throws ScoreBoardException, GameException {
         final String formatedHomeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
         final String formatedAwayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
         List<String> allTeamNames = new ArrayList<>();
-        gameBoard.entrySet()
+        scoreBoard.entrySet()
                 .parallelStream()
                 .forEach(e -> {
                     allTeamNames.add(e.getValue().getHomeTeamName());
@@ -28,7 +28,7 @@ public class FifaWorldCupScoreBoard
         if (allTeamNames.contains(formatedAwayTeamName) || allTeamNames.contains(formatedHomeTeamName))
             throw new ScoreBoardException("A team cannot be in two active games at the same time");
 
-        gameBoard.put(formatedHomeTeamName + "-" + formatedAwayTeamName,
+        scoreBoard.put(formatedHomeTeamName + "-" + formatedAwayTeamName,
                 new FootballGame(formatedHomeTeamName, formatedAwayTeamName));
     }
 
@@ -38,7 +38,7 @@ public class FifaWorldCupScoreBoard
         final String formatedHomeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
         final String formatedAwayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
         final String scoreBoardKey = formatedHomeTeamName + "-" + formatedAwayTeamName;
-        FootballGame game = Optional.ofNullable(gameBoard.get(scoreBoardKey))
+        FootballGame game = Optional.ofNullable(scoreBoard.get(scoreBoardKey))
                 .orElseThrow(() -> new ScoreBoardException("No game found with the provided theam names"));
         game.updateScore(updateScoreRequest);
     }
@@ -46,7 +46,7 @@ public class FifaWorldCupScoreBoard
     @Override
     public List<FifaWorldCupScoreBoardGameSummary> getScoreBoardSummary() {
         List<FootballGame> allGamesCollection = new ArrayList<>();
-        gameBoard.forEach((key, value) -> allGamesCollection.add(value));
+        scoreBoard.forEach((key, value) -> allGamesCollection.add(value));
 
         Comparator<FootballGame> conComparableFootballGame = Comparator
                 .comparing(FootballGame::getOverallScore)
