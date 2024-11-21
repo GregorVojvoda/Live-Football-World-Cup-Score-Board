@@ -6,5 +6,6 @@ public interface Game <T>{
 
     void finishMatch();
     void updateScore(T scoreUpdateRequest) throws GameException;
+    long getOverallScore();
 
 }
