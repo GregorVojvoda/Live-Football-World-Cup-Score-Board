@@ -95,7 +95,10 @@ class FootballGameTest {
         return Stream.of(
             Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
             Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
-            Arguments.of(new FootballGameScoreUpdateRequest(-1, -1))
+            Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
+            Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
+            Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
+            Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
         );
     }
 

@@ -33,7 +33,10 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest>{
     @Override
     public void updateScore(FootballGameScoreUpdateRequest request) throws GameException {
         if(this.finish) throw new GameException("Finished match score cannot be modified");
-        if(request.getUpdatedHomeTeamScore() < 0 || request.getUpdatedAwayTeamScore() < 0) throw new GameException("Score value cannot be negative");
+        if(request.getUpdatedHomeTeamScore() < 0 
+        || request.getUpdatedAwayTeamScore() < 0
+        || request.getUpdatedHomeTeamScore() > 200
+        || request.getUpdatedAwayTeamScore() > 200) throw new GameException("Score value cannot be negative or higher that 200");
         this.homeScore = request.getUpdatedHomeTeamScore();
         this.awayScore = request.getUpdatedAwayTeamScore();
     }
