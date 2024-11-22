@@ -92,7 +92,7 @@ class FifaWorldCupScoreBoardTest {
         scoreBoard.updateGameScore("SLOVENIA", "CROATIA", new FootballGameScoreUpdateRequest(1, 1));
         scoreBoard.updateGameScore("ARGENTINA", "AUSTRALIA", new FootballGameScoreUpdateRequest(3, 1));
 
-        scoreBoard.finishGame("SLOVENIA", "CROATIA");
+        scoreBoard.endGame("SLOVENIA", "CROATIA");
 
         List<FifaWorldCupScoreBoardGameSummary> gameSummaryList = scoreBoard.getScoreBoardSummary();
         assertEquals(5, gameSummaryList.size());
@@ -135,28 +135,37 @@ class FifaWorldCupScoreBoardTest {
 
     @ParameterizedTest(name = "Finish Game requests with invalid game names {index}")
     @MethodSource("invalidTeamNamePairsUpdateAndFinish")
-    void finishGame_KO(String homeTeamName, String awayTeamName) {
+    void endGame_KO(String homeTeamName, String awayTeamName) {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
-        assertThrows(GameException.class, () -> scoreBoard.finishGame(homeTeamName, awayTeamName));
+        assertThrows(GameException.class, () -> scoreBoard.endGame(homeTeamName, awayTeamName));
     }
 
     @Test
-    void finishGame_OK_existingGame() throws GameException, ScoreBoardException {
+    void endGame_OK_existingGame() throws GameException, ScoreBoardException {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("MEXICO", "CANADA");
         scoreBoard.updateGameScore("MEXICO", "CANADA", new FootballGameScoreUpdateRequest(0, 5));
-        scoreBoard.finishGame("MEXICO", "CANADA");
+        scoreBoard.endGame("MEXICO", "CANADA");
         assertEquals(0, scoreBoard.getScoreBoardSummary().size());
     }
 
 
     @Test
-    void finishGame_OK_existingGameBadlyFormatedNames() throws GameException, ScoreBoardException {
+    void endGame_OK_existingGameBadlyFormatedNames() throws GameException, ScoreBoardException {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame(" Mexico ", "cAnAda");
         scoreBoard.updateGameScore("mexico", "canada", new FootballGameScoreUpdateRequest(0, 5));
-        scoreBoard.finishGame("   MexIco ", "CanaDa   ");
+        scoreBoard.endGame("   MexIco ", "CanaDa   ");
         assertEquals(0, scoreBoard.getScoreBoardSummary().size());
+    }
+
+    @Test
+    void endGame_KO_noGameFoud() throws GameException, ScoreBoardException {
+        FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
+        scoreBoard.initializeGame("MEX", "USA");
+        scoreBoard.updateGameScore("MEX", "USA", new FootballGameScoreUpdateRequest(0, 5));
+        assertThrows(ScoreBoardException.class, () ->
+                scoreBoard.endGame("MEX", "SLO"));
     }
 
     private static Stream<Arguments> validTeamNamePairsSloItaHun() {

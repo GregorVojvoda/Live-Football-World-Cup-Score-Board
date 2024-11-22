@@ -61,10 +61,10 @@ class FootballGameTest {
     // FinishMatch
 
     @Test
-    void finishMatch_OK() throws GameException {
+    void endGame_OK() throws GameException {
         // Given 
         FootballGame match = new FootballGame("SLO", "ITA");
-        match.finishMatch();
+        match.endGame();
         assertTrue(match.isFinish());
     }
 
@@ -74,13 +74,13 @@ class FootballGameTest {
     void updateScore_KO_machIsOver() throws GameException {
         // Given
         FootballGame match = new FootballGame("SLO", "ITA");
-        match.finishMatch();
+        match.endGame();
         // Then
         assertThrows(GameException.class, () -> match.updateScore(new FootballGameScoreUpdateRequest(1, 1)));
     }
 
     @ParameterizedTest
-    @MethodSource("negativeScoreCombiationions")
+    @MethodSource("negativeScoreCombinations")
     void updateScore_KO_scoreIsNegative(FootballGameScoreUpdateRequest request) throws GameException {
         // Given
         FootballGame match = new FootballGame("SLO", "ITA");
@@ -88,7 +88,7 @@ class FootballGameTest {
         assertThrows(GameException.class, () -> match.updateScore(request));
     }
 
-    private static Stream<Arguments> negativeScoreCombiationions() {
+    private static Stream<Arguments> negativeScoreCombinations() {
         return Stream.of(
                 Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
                 Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
@@ -97,6 +97,13 @@ class FootballGameTest {
                 Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
                 Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
         );
+    }
+
+    @Test
+    void updateScore_KO_nullFootballGameScoreUpdateRequest() throws GameException{
+        FootballGame match = new FootballGame("SLO", "ITA");
+        // Then
+        assertThrows(GameException.class, () -> match.updateScore(null));
     }
 
     @Test
@@ -131,7 +138,7 @@ class FootballGameTest {
         // Given
         FootballGame game = new FootballGame("SLO", "ITA");
         game.updateScore(new FootballGameScoreUpdateRequest(6, 6));
-        game.finishMatch();
+        game.endGame();
         // When Then
         assertEquals(12, game.getOverallScore());
 

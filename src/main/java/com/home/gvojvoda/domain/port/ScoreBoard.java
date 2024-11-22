@@ -7,7 +7,7 @@ public interface ScoreBoard<T, A> {
 
     void initializeGame(String homeTeam, String awayTeam) throws ScoreBoardException, GameException;
 
-    void finishGame(String homeTeam, String awayTeam) throws ScoreBoardException, GameException;
+    void endGame(String homeTeam, String awayTeam) throws ScoreBoardException, GameException;
 
     void updateGameScore(String homeTeamName, String awayTeamName, A scoreUpdateRequest)
             throws ScoreBoardException, GameException;

@@ -57,11 +57,15 @@ public class FifaWorldCupScoreBoard
     }
 
     @Override
-    public void finishGame(String homeTeamName, String awayTeamName) throws GameException {
+    public void endGame(String homeTeamName, String awayTeamName) throws GameException, ScoreBoardException {
         final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
         final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
 
-        scoreBoard.remove(scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName));
+        final String key = scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName);
+        FootballGame footballGame = Optional.ofNullable(scoreBoard.get(key)).orElseThrow(() -> new ScoreBoardException("No game found with the provided team names"));
+        footballGame.endGame();
+
+        scoreBoard.remove(key);
     }
 
     private String scoreBoardKeyGenerator(String formatedHomeTeamName, String formatedAwayTeamName) {

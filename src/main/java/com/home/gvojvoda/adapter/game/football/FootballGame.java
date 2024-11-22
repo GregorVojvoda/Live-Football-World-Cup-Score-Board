@@ -6,6 +6,7 @@ import com.home.gvojvoda.domain.util.GameTeamNameUtil;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 public class FootballGame implements Game<FootballGameScoreUpdateRequest> {
@@ -29,13 +30,14 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest> {
         this.finish = false;
     }
 
-    public void finishMatch() {
+    public void endGame() {
         this.finish = true;
     }
 
     @Override
     public void updateScore(FootballGameScoreUpdateRequest request) throws GameException {
         if (this.finish) throw new GameException("Finished match score cannot be modified");
+        if (Objects.isNull(request)) throw new GameException("FootballGameScoreUpdateRequest request cannot be null");
         if (request.updatedHomeTeamScore() < 0
                 || request.updatedAwayTeamScore() < 0
                 || request.updatedHomeTeamScore() > 200
