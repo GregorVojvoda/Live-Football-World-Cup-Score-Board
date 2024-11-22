@@ -2,10 +2,10 @@ package com.home.gvojvoda.adapter.scoreboard.fifaworldcup;
 
 import com.home.gvojvoda.adapter.game.football.FootballGame;
 import com.home.gvojvoda.adapter.game.football.FootballGameScoreUpdateRequest;
-import com.home.gvojvoda.adapter.game.football.FootballGameTeamNameUtil;
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.exception.ScoreBoardException;
 import com.home.gvojvoda.domain.port.ScoreBoard;
+import com.home.gvojvoda.domain.util.GameTeamNameUtil;
 
 import java.util.*;
 
@@ -16,30 +16,27 @@ public class FifaWorldCupScoreBoard
 
     @Override
     public void initializeGame(String homeTeamName, String awayTeamName) throws ScoreBoardException, GameException {
-        final String formatedHomeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
-        final String formatedAwayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
-        List<String> allTeamNames = new ArrayList<>();
-        scoreBoard.entrySet()
-                .parallelStream()
-                .forEach(e -> {
-                    allTeamNames.add(e.getValue().getHomeTeamName());
-                    allTeamNames.add(e.getValue().getAwayTeamName());
-                });
+        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+
+        List<String> allTeamNames = extractTeamNamesInTheScoreBoard();
+
         if (allTeamNames.contains(formatedAwayTeamName) || allTeamNames.contains(formatedHomeTeamName))
             throw new ScoreBoardException("A team cannot be in two active games at the same time");
 
-        scoreBoard.put(formatedHomeTeamName + "-" + formatedAwayTeamName,
+        scoreBoard.put(scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName),
                 new FootballGame(formatedHomeTeamName, formatedAwayTeamName));
     }
 
     @Override
     public void updateGameScore(String homeTeamName, String awayTeamName,
                                 FootballGameScoreUpdateRequest updateScoreRequest) throws ScoreBoardException, GameException {
-        final String formatedHomeTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
-        final String formatedAwayTeamName = FootballGameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
-        final String scoreBoardKey = formatedHomeTeamName + "-" + formatedAwayTeamName;
+        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+        final String scoreBoardKey = scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName);
+
         FootballGame game = Optional.ofNullable(scoreBoard.get(scoreBoardKey))
-                .orElseThrow(() -> new ScoreBoardException("No game found with the provided theam names"));
+                .orElseThrow(() -> new ScoreBoardException("No game found with the provided team names"));
         game.updateScore(updateScoreRequest);
     }
 
@@ -59,4 +56,26 @@ public class FifaWorldCupScoreBoard
         return orderedGamesSummaryCollection;
     }
 
+    @Override
+    public void finishGame(String homeTeamName, String awayTeamName) throws GameException {
+        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+
+        scoreBoard.remove(scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName));
+    }
+
+    private String scoreBoardKeyGenerator(String formatedHomeTeamName, String formatedAwayTeamName) {
+        return formatedHomeTeamName + "-" + formatedAwayTeamName;
+    }
+
+    private List<String> extractTeamNamesInTheScoreBoard() {
+        List<String> allTeamNames = new ArrayList<>();
+        scoreBoard.entrySet()
+                .parallelStream()
+                .forEach(e -> {
+                    allTeamNames.add(e.getValue().getHomeTeamName());
+                    allTeamNames.add(e.getValue().getAwayTeamName());
+                });
+        return allTeamNames;
+    }
 }

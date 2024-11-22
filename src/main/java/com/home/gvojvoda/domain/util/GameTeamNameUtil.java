@@ -1,15 +1,15 @@
-package com.home.gvojvoda.adapter.game.football;
+package com.home.gvojvoda.domain.util;
 
 import com.home.gvojvoda.domain.exception.GameException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
 
-public class FootballGameTeamNameUtil {
+public class GameTeamNameUtil {
 
     private static final String TEAM_NAME_VALIDATION_REGEXP = "^[\\w\\s]{1,100}$";
 
-    private FootballGameTeamNameUtil() {
+    private GameTeamNameUtil() {
     }
 
     public static String validateAndFormatTeamName(String teamName) throws GameException {
