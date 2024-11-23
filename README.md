@@ -25,6 +25,7 @@ Currently, it features an implementation for the FIFA World Cup, focusing on foo
 ## Technologies
 ![](https://skillicons.dev/icons?i=java)
 ![](https://skillicons.dev/icons?i=maven)
+> Java 21
 
 ----
 ## Overview
