@@ -30,6 +30,7 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest> {
         this.finish = false;
     }
 
+    @Override
     public void endGame() {
         this.finish = true;
     }
