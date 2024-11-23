@@ -12,17 +12,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FootballGameTest {
 
-    // Match initialization
+    // ------------------------------
+    // ---- Match initialization ----
+    // ------------------------------
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("matchesWithInvalidNames")
-    void matchInit_KO_invalidNames(String testName, String homeTeam, String awaiTeam) {
+    @MethodSource("gamesWithInvalidNames")
+    void gameInit_KO_invalidNames(String testName, String homeTeam, String awayTeam) {
         assertThrows(GameException.class, () -> {
-            new FootballGame(homeTeam, awaiTeam);
+            new FootballGame(homeTeam, awayTeam);
         });
     }
 
-    private static Stream<Arguments> matchesWithInvalidNames() {
+    private static Stream<Arguments> gamesWithInvalidNames() {
         return Stream.of(
                 Arguments.of("HomeTeamNull", null, "Slovenia"),
                 Arguments.of("AwayTeamNull", "Slovenia", null),
@@ -50,15 +52,9 @@ class FootballGameTest {
         assertNotNull(match.getMatchStart());
     }
 
-    private static Stream<Arguments> matchesWithValidTeamNames() {
-        return Stream.of(
-                Arguments.of("    Slovenia    ", "SLOVENIA", "Italia", "ITALIA"),
-                Arguments.of("Slovenia 1", "SLOVENIA_1", "Italia       1", "ITALIA_1"),
-                Arguments.of("SLOVENIA_01", "SLOVENIA_01", "ITA    LIA 01", "ITA_LIA_01")
-        );
-    }
-
-    // FinishMatch
+    // ----------------------
+    // ---- Finish Match ----
+    // ----------------------
 
     @Test
     void endGame_OK() throws GameException {
@@ -67,8 +63,9 @@ class FootballGameTest {
         match.endGame();
         assertTrue(match.isFinish());
     }
-
-    // Update Score
+    // ----------------------
+    // ---- Update Score ----
+    // ----------------------
 
     @Test
     void updateScore_KO_machIsOver() throws GameException {
@@ -88,19 +85,9 @@ class FootballGameTest {
         assertThrows(GameException.class, () -> match.updateScore(request));
     }
 
-    private static Stream<Arguments> negativeScoreCombinations() {
-        return Stream.of(
-                Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
-                Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
-                Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
-                Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
-                Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
-                Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
-        );
-    }
-
     @Test
-    void updateScore_KO_nullFootballGameScoreUpdateRequest() throws GameException{
+    void updateScore_KO_nullFootballGameScoreUpdateRequest() throws GameException {
+        // Given
         FootballGame match = new FootballGame("SLO", "ITA");
         // Then
         assertThrows(GameException.class, () -> match.updateScore(null));
@@ -108,13 +95,18 @@ class FootballGameTest {
 
     @Test
     void updateScore_OK() throws GameException {
+        // Given
         FootballGame match = new FootballGame("SLO", "ITA");
+        // When
         match.updateScore(new FootballGameScoreUpdateRequest(2, 3));
+        // Then
         assertEquals(2, match.getHomeScore());
         assertEquals(3, match.getAwayScore());
     }
 
-    // Get TotalScore
+    // ------------------------
+    // ---- Get TotalScore ----
+    // ------------------------
 
     @Test
     void getTotalScore_OK() throws GameException {
@@ -142,6 +134,29 @@ class FootballGameTest {
         // When Then
         assertEquals(12, game.getOverallScore());
 
+    }
+
+    // -------------------------
+    // --- Argument Methods ----
+    // -------------------------
+
+    private static Stream<Arguments> matchesWithValidTeamNames() {
+        return Stream.of(
+                Arguments.of("    Slovenia    ", "SLOVENIA", "Italia", "ITALIA"),
+                Arguments.of("Slovenia 1", "SLOVENIA_1", "Italia       1", "ITALIA_1"),
+                Arguments.of("SLOVENIA_01", "SLOVENIA_01", "ITA    LIA 01", "ITA_LIA_01")
+        );
+    }
+
+    private static Stream<Arguments> negativeScoreCombinations() {
+        return Stream.of(
+                Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
+                Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
+                Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
+                Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
+                Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
+                Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
+        );
     }
 
 

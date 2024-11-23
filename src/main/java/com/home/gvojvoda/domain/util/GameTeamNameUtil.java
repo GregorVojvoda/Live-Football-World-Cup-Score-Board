@@ -1,8 +1,8 @@
 package com.home.gvojvoda.domain.util;
 
 import com.home.gvojvoda.domain.exception.GameException;
-import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class GameTeamNameUtil {
@@ -18,7 +18,7 @@ public class GameTeamNameUtil {
     }
 
     private static void validateTeamName(String teamName) throws GameException {
-        if (StringUtils.isBlank(teamName)) throw new GameException("Team Name cannot be null");
+        if (Objects.isNull(teamName) || teamName.isBlank()) throw new GameException("Team Name cannot be null");
         Pattern patter = Pattern.compile(TEAM_NAME_VALIDATION_REGEXP);
         if (!patter.matcher(teamName).matches()) throw new GameException("Team name contains invalid characters");
     }
