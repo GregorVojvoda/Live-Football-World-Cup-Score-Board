@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
-public class FootballGame implements Game<FootballGameScoreUpdateRequest> {
+public class FootballGame implements Game<FootballGameScore> {
 
     private final LocalDateTime matchStart;
     private final String homeTeamName;
@@ -36,16 +36,16 @@ public class FootballGame implements Game<FootballGameScoreUpdateRequest> {
     }
 
     @Override
-    public void updateScore(FootballGameScoreUpdateRequest request) throws GameException {
+    public void updateScore(FootballGameScore request) throws GameException {
         if (this.finish) throw new GameException("Finished match score cannot be modified");
         if (Objects.isNull(request)) throw new GameException("FootballGameScoreUpdateRequest request cannot be null");
-        if (request.updatedHomeTeamScore() < 0
-                || request.updatedAwayTeamScore() < 0
-                || request.updatedHomeTeamScore() > 200
-                || request.updatedAwayTeamScore() > 200)
+        if (request.homeTeamScore() < 0
+                || request.awayTeamScore() < 0
+                || request.homeTeamScore() > 200
+                || request.awayTeamScore() > 200)
             throw new GameException("Score value cannot be negative or higher that 200");
-        this.homeScore = request.updatedHomeTeamScore();
-        this.awayScore = request.updatedAwayTeamScore();
+        this.homeScore = request.homeTeamScore();
+        this.awayScore = request.awayTeamScore();
     }
 
     @Override

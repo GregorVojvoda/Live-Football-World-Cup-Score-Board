@@ -86,7 +86,7 @@ If the provided strings do not match the regular expression or if the two names 
 public FootballGame(String homeTeam, String awayTeam) throws GameException;
 ```
 #### Updating the Score:
-You can update the score using a FootballGameScoreUpdateRequest object.
+You can update the score using a FootballGameScore object.
 The provided new scores replace the current ones, but they must satisfy the following conditions:
 - Scores cannot be negative.
 - Scores cannot exceed 200.
@@ -110,9 +110,9 @@ Next, we check the scoreboard map to see if it contains any active game with eit
 If both validations pass, a key for the game is created by combining the formatted home team name and formatted away team name, separated by a dash (-).
 A new ```FootballGame``` is then initialized and inserted into the map with the generated key.
 #### Updating a Game Score
-To update a game score, two valid team names *(home and away)* and a ```FootballGameScoreUpdateRequest``` object are required.
+To update a game score, two valid team names *(home and away)* and a ```FootballGameScore``` object are required.
 The team names are validated and formatted in the same way as before. Then, we construct the key in the same manner as in the initializeGame function.
-Next, we search the map using the generated key. If no value is found with the key, a ScoreBoardException is thrown. Otherwise, we attempt to update the found FootballGame with the provided ```FootballGameScoreUpdateRequest```.
+Next, we search the map using the generated key. If no value is found with the key, a ScoreBoardException is thrown. Otherwise, we attempt to update the found FootballGame with the provided ```FootballGameScore```.
 If the update fails, a ```GameException``` is thrown.
 #### End A Game
 To end a game, two valid team names *(home and away)* are required *(see FootballGame team name validation)*. The names are then formatted using the FootballGame formatting logic and used to construct the key as before.

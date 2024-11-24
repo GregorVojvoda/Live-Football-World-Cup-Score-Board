@@ -1,6 +1,6 @@
 package com.home.gvojvoda.adapter.scoreboard.fifaworldcup;
 
-import com.home.gvojvoda.adapter.game.football.FootballGameScoreUpdateRequest;
+import com.home.gvojvoda.adapter.game.football.FootballGameScore;
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.exception.ScoreBoardException;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class FifaWorldCupScoreBoardTest {
     void updateGameScore_KO_invalidTeamNames(String homeTeamName, String awayTeamName) {
         // Given
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
-        FootballGameScoreUpdateRequest updateScoreRequest = new FootballGameScoreUpdateRequest(1, 1);
+        FootballGameScore updateScoreRequest = new FootballGameScore(1, 1);
         // When Then
         assertThrows(GameException.class,
                 () -> scoreBoard.updateGameScore(homeTeamName, awayTeamName, updateScoreRequest));
@@ -64,7 +64,7 @@ class FifaWorldCupScoreBoardTest {
         scoreBoard.initializeGame("GER", "HUN");
         // When Then
         assertThrows(ScoreBoardException.class,
-                () -> scoreBoard.updateGameScore(homeTeamName, awayTeamName, new FootballGameScoreUpdateRequest(4, 2)));
+                () -> scoreBoard.updateGameScore(homeTeamName, awayTeamName, new FootballGameScore(4, 2)));
     }
 
     @Test
@@ -73,7 +73,7 @@ class FifaWorldCupScoreBoardTest {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("GER", "HUN");
         // When
-        scoreBoard.updateGameScore("GER", "HUN", new FootballGameScoreUpdateRequest(5, 2));
+        scoreBoard.updateGameScore("GER", "HUN", new FootballGameScore(5, 2));
         // Then
         FifaWorldCupScoreBoardGameSummary gameSummary = scoreBoard.getScoreBoardSummary().getFirst();
         assertEquals(5, gameSummary.getHomeTeamScore());
@@ -84,7 +84,7 @@ class FifaWorldCupScoreBoardTest {
     void updateGameScore_OK_badNameFormatting() throws ScoreBoardException, GameException {
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("GER", "HUN");
-        scoreBoard.updateGameScore("  gEr", "hUN   ", new FootballGameScoreUpdateRequest(5, 2));
+        scoreBoard.updateGameScore("  gEr", "hUN   ", new FootballGameScore(5, 2));
         FifaWorldCupScoreBoardGameSummary gameSummary = scoreBoard.getScoreBoardSummary().getFirst();
         assertEquals(5, gameSummary.getHomeTeamScore());
         assertEquals(2, gameSummary.getAwayTeamScore());
@@ -105,12 +105,12 @@ class FifaWorldCupScoreBoardTest {
         scoreBoard.initializeGame("ARGENTINA", "AUSTRALIA");
         scoreBoard.initializeGame("SLOVENIA", "CROATIA");
 
-        scoreBoard.updateGameScore("MEXICO", "CANADA", new FootballGameScoreUpdateRequest(0, 5));
-        scoreBoard.updateGameScore("SPAIN", "BRAZIL", new FootballGameScoreUpdateRequest(10, 2));
-        scoreBoard.updateGameScore("GERMANY", "FRANCE", new FootballGameScoreUpdateRequest(2, 2));
-        scoreBoard.updateGameScore("URUGUAY", "ITALY", new FootballGameScoreUpdateRequest(6, 6));
-        scoreBoard.updateGameScore("SLOVENIA", "CROATIA", new FootballGameScoreUpdateRequest(1, 1));
-        scoreBoard.updateGameScore("ARGENTINA", "AUSTRALIA", new FootballGameScoreUpdateRequest(3, 1));
+        scoreBoard.updateGameScore("MEXICO", "CANADA", new FootballGameScore(0, 5));
+        scoreBoard.updateGameScore("SPAIN", "BRAZIL", new FootballGameScore(10, 2));
+        scoreBoard.updateGameScore("GERMANY", "FRANCE", new FootballGameScore(2, 2));
+        scoreBoard.updateGameScore("URUGUAY", "ITALY", new FootballGameScore(6, 6));
+        scoreBoard.updateGameScore("SLOVENIA", "CROATIA", new FootballGameScore(1, 1));
+        scoreBoard.updateGameScore("ARGENTINA", "AUSTRALIA", new FootballGameScore(3, 1));
 
         scoreBoard.endGame("SLOVENIA", "CROATIA");
 
@@ -174,7 +174,7 @@ class FifaWorldCupScoreBoardTest {
         // Given
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("MEXICO", "CANADA");
-        scoreBoard.updateGameScore("MEXICO", "CANADA", new FootballGameScoreUpdateRequest(0, 5));
+        scoreBoard.updateGameScore("MEXICO", "CANADA", new FootballGameScore(0, 5));
         scoreBoard.endGame("MEXICO", "CANADA");
         // When Then
         assertEquals(0, scoreBoard.getScoreBoardSummary().size());
@@ -186,7 +186,7 @@ class FifaWorldCupScoreBoardTest {
         // Given
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame(" Mexico ", "cAnAda");
-        scoreBoard.updateGameScore("mexico", "canada", new FootballGameScoreUpdateRequest(0, 5));
+        scoreBoard.updateGameScore("mexico", "canada", new FootballGameScore(0, 5));
         scoreBoard.endGame("   MexIco ", "CanaDa   ");
         // When Then
         assertEquals(0, scoreBoard.getScoreBoardSummary().size());
@@ -197,7 +197,7 @@ class FifaWorldCupScoreBoardTest {
         // Given
         FifaWorldCupScoreBoard scoreBoard = new FifaWorldCupScoreBoard();
         scoreBoard.initializeGame("MEX", "USA");
-        scoreBoard.updateGameScore("MEX", "USA", new FootballGameScoreUpdateRequest(0, 5));
+        scoreBoard.updateGameScore("MEX", "USA", new FootballGameScore(0, 5));
         // When Then
         assertThrows(ScoreBoardException.class, () ->
                 scoreBoard.endGame("MEX", "SLO"));

@@ -1,7 +1,7 @@
 package com.home.gvojvoda.adapter.scoreboard.fifaworldcup;
 
 import com.home.gvojvoda.adapter.game.football.FootballGame;
-import com.home.gvojvoda.adapter.game.football.FootballGameScoreUpdateRequest;
+import com.home.gvojvoda.adapter.game.football.FootballGameScore;
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.exception.ScoreBoardException;
 import com.home.gvojvoda.domain.port.ScoreBoard;
@@ -10,7 +10,7 @@ import com.home.gvojvoda.domain.util.GameTeamNameUtil;
 import java.util.*;
 
 public class FifaWorldCupScoreBoard
-        implements ScoreBoard<List<FifaWorldCupScoreBoardGameSummary>, FootballGameScoreUpdateRequest> {
+        implements ScoreBoard<List<FifaWorldCupScoreBoardGameSummary>, FootballGameScore> {
 
     private final Map<String, FootballGame> scoreBoard = new HashMap<>();
 
@@ -30,14 +30,14 @@ public class FifaWorldCupScoreBoard
 
     @Override
     public void updateGameScore(String homeTeamName, String awayTeamName,
-                                FootballGameScoreUpdateRequest updateScoreRequest) throws ScoreBoardException, GameException {
+                                FootballGameScore score) throws ScoreBoardException, GameException {
         final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
         final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
         final String scoreBoardKey = scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName);
 
         FootballGame game = Optional.ofNullable(scoreBoard.get(scoreBoardKey))
                 .orElseThrow(() -> new ScoreBoardException("No game found with the provided team names"));
-        game.updateScore(updateScoreRequest);
+        game.updateScore(score);
     }
 
     @Override

@@ -73,12 +73,12 @@ class FootballGameTest {
         FootballGame match = new FootballGame("SLO", "ITA");
         match.endGame();
         // Then
-        assertThrows(GameException.class, () -> match.updateScore(new FootballGameScoreUpdateRequest(1, 1)));
+        assertThrows(GameException.class, () -> match.updateScore(new FootballGameScore(1, 1)));
     }
 
     @ParameterizedTest
     @MethodSource("negativeScoreCombinations")
-    void updateScore_KO_scoreIsNegative(FootballGameScoreUpdateRequest request) throws GameException {
+    void updateScore_KO_scoreIsNegative(FootballGameScore request) throws GameException {
         // Given
         FootballGame match = new FootballGame("SLO", "ITA");
         // Then
@@ -86,7 +86,7 @@ class FootballGameTest {
     }
 
     @Test
-    void updateScore_KO_nullFootballGameScoreUpdateRequest() throws GameException {
+    void updateScore_KO_nullFootballGameScore() throws GameException {
         // Given
         FootballGame match = new FootballGame("SLO", "ITA");
         // Then
@@ -98,7 +98,7 @@ class FootballGameTest {
         // Given
         FootballGame match = new FootballGame("SLO", "ITA");
         // When
-        match.updateScore(new FootballGameScoreUpdateRequest(2, 3));
+        match.updateScore(new FootballGameScore(2, 3));
         // Then
         assertEquals(2, match.getHomeScore());
         assertEquals(3, match.getAwayScore());
@@ -120,7 +120,7 @@ class FootballGameTest {
     void getTotalScore_OK_withScoreUpdate() throws GameException {
         // Given 
         FootballGame game = new FootballGame("ITA", "SLO");
-        game.updateScore(new FootballGameScoreUpdateRequest(5, 3));
+        game.updateScore(new FootballGameScore(5, 3));
         // When Then
         assertEquals(8, game.getOverallScore());
     }
@@ -129,7 +129,7 @@ class FootballGameTest {
     void getTotalScore_OK_finishedGame() throws GameException {
         // Given
         FootballGame game = new FootballGame("SLO", "ITA");
-        game.updateScore(new FootballGameScoreUpdateRequest(6, 6));
+        game.updateScore(new FootballGameScore(6, 6));
         game.endGame();
         // When Then
         assertEquals(12, game.getOverallScore());
@@ -150,12 +150,12 @@ class FootballGameTest {
 
     private static Stream<Arguments> negativeScoreCombinations() {
         return Stream.of(
-                Arguments.of(new FootballGameScoreUpdateRequest(0, -1)),
-                Arguments.of(new FootballGameScoreUpdateRequest(-1, 0)),
-                Arguments.of(new FootballGameScoreUpdateRequest(-1, -1)),
-                Arguments.of(new FootballGameScoreUpdateRequest(201, 3)),
-                Arguments.of(new FootballGameScoreUpdateRequest(6, 300)),
-                Arguments.of(new FootballGameScoreUpdateRequest(5000, 999999))
+                Arguments.of(new FootballGameScore(0, -1)),
+                Arguments.of(new FootballGameScore(-1, 0)),
+                Arguments.of(new FootballGameScore(-1, -1)),
+                Arguments.of(new FootballGameScore(201, 3)),
+                Arguments.of(new FootballGameScore(6, 300)),
+                Arguments.of(new FootballGameScore(5000, 999999))
         );
     }
 
