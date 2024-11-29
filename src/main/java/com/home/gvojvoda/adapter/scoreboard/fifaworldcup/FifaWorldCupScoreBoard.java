@@ -46,7 +46,7 @@ public class FifaWorldCupScoreBoard
         scoreBoard.forEach((key, value) -> allGamesCollection.add(value));
 
         Comparator<FootballGame> conComparableFootballGame = Comparator
-                .comparing(FootballGame::getOverallScore)
+                .comparing(this::calculateGameOverallScore)
                 .thenComparing(FootballGame::getMatchStart).reversed();
 
         List<FifaWorldCupScoreBoardGameSummary> orderedGamesSummaryCollection = new ArrayList<>();
@@ -81,5 +81,9 @@ public class FifaWorldCupScoreBoard
                     allTeamNames.add(e.getValue().getAwayTeamName());
                 });
         return allTeamNames;
+    }
+
+    private int calculateGameOverallScore(FootballGame footballGame) {
+        return footballGame.getHomeScore() + footballGame.getAwayScore();
     }
 }

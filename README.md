@@ -9,7 +9,6 @@
   - [FootballGame](#footballgame)
     - [Updating the score](#updating-the-score)
     - [Ending the Game](#ending-the-game)
-    - [Getting the Overall Score](#getting-the-overall-score)
   - [FifaWorldCupScoreBoard](#fifaworldcupscoreboard)
     - [Initializing a Game](#initializing-a-game)
     - [Updating a Game Score](#updating-a-game-score)
@@ -57,10 +56,6 @@ Currently, it features an implementation for the FIFA World Cup, focusing on foo
     ```java
      void updateScore(T scoreUpdateRequest) throws GameException;
     ```
-- Get the overall game score
-    ```java
-     long getOverallScore();
-    ```
   
 ----
 ## Features
@@ -95,8 +90,6 @@ The upper limit prevents issues in overall score calculations and reflects the u
 Lower scores than the current ones are allowed, as goals can be revoked in rare situations.
 #### Ending the Game:
   You can end the game, which simply sets the finish property to true.
-#### Getting the Overall Score:
-  The overall score of the game is the sum of the home and away team scores.
 
 ### FifaWorldCupScoreBoard
 The **FifaWorldCupScoreBoard** is a simple implementation of the ScoreBoard interface. It does not require any initialization parameters.
@@ -121,7 +114,7 @@ Otherwise, the FootballGame is ended and removed from the map.
 
 #### Getting the Score Board Summary
 The scoreboard summary returns an ordered list of the games in the map.
-The games are primarily sorted by the result of the ```getOverallScore()``` function, with higher-scoring games prioritized.
+The games are primarily sorted by the overall result, which is the combined score of the home and away teams, with higher-scoring games given priority.
 If two games have the same overall score, they are sorted by the creation date, with the most recent games prioritized.
 The sorted games are then returned as an ordered list of ```FifaWorldCupScoreBoardGameSummary``` class objects. This is done to provide only the necessary information in the response.
 The information includes the team names and their corresponding scores.

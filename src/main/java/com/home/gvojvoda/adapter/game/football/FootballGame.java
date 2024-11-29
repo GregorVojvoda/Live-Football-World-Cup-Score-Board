@@ -47,11 +47,4 @@ public class FootballGame implements Game<FootballGameScore> {
         this.homeScore = request.homeTeamScore();
         this.awayScore = request.awayTeamScore();
     }
-
-    @Override
-    public long getOverallScore() {
-        return (homeScore + awayScore);
-    }
-
-
 }

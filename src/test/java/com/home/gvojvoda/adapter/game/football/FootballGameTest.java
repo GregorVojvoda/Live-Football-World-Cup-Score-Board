@@ -104,38 +104,6 @@ class FootballGameTest {
         assertEquals(3, match.getAwayScore());
     }
 
-    // ------------------------
-    // ---- Get TotalScore ----
-    // ------------------------
-
-    @Test
-    void getTotalScore_OK() throws GameException {
-        // Given
-        FootballGame game = new FootballGame("ITA", "SLO");
-        // When Then
-        assertEquals(0, game.getOverallScore());
-    }
-
-    @Test
-    void getTotalScore_OK_withScoreUpdate() throws GameException {
-        // Given 
-        FootballGame game = new FootballGame("ITA", "SLO");
-        game.updateScore(new FootballGameScore(5, 3));
-        // When Then
-        assertEquals(8, game.getOverallScore());
-    }
-
-    @Test
-    void getTotalScore_OK_finishedGame() throws GameException {
-        // Given
-        FootballGame game = new FootballGame("SLO", "ITA");
-        game.updateScore(new FootballGameScore(6, 6));
-        game.endGame();
-        // When Then
-        assertEquals(12, game.getOverallScore());
-
-    }
-
     // -------------------------
     // --- Argument Methods ----
     // -------------------------

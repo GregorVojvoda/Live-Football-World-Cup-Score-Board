@@ -8,6 +8,4 @@ public interface Game<T> {
 
     void updateScore(T scoreUpdateRequest) throws GameException;
 
-    long getOverallScore();
-
 }
