@@ -5,19 +5,21 @@ import com.home.gvojvoda.adapter.game.football.FootballGameScore;
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.exception.ScoreBoardException;
 import com.home.gvojvoda.domain.port.ScoreBoard;
-import com.home.gvojvoda.domain.util.GameTeamNameUtil;
+import com.home.gvojvoda.domain.util.GameTeamNameProcessor;
 
 import java.util.*;
 
 public class FifaWorldCupScoreBoard
         implements ScoreBoard<List<FifaWorldCupScoreBoardGameSummary>, FootballGameScore> {
 
+    private final GameTeamNameProcessor gameTeamNameProcessor = new GameTeamNameProcessor();
+
     private final Map<String, FootballGame> scoreBoard = new HashMap<>();
 
     @Override
     public void initializeGame(String homeTeamName, String awayTeamName) throws ScoreBoardException, GameException {
-        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
-        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+        final String formatedHomeTeamName = gameTeamNameProcessor.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = gameTeamNameProcessor.validateAndFormatTeamName(awayTeamName);
 
         List<String> allTeamNames = extractTeamNamesInTheScoreBoard();
 
@@ -31,8 +33,8 @@ public class FifaWorldCupScoreBoard
     @Override
     public void updateGameScore(String homeTeamName, String awayTeamName,
                                 FootballGameScore score) throws ScoreBoardException, GameException {
-        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
-        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+        final String formatedHomeTeamName = gameTeamNameProcessor.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = gameTeamNameProcessor.validateAndFormatTeamName(awayTeamName);
         final String scoreBoardKey = scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName);
 
         FootballGame game = Optional.ofNullable(scoreBoard.get(scoreBoardKey))
@@ -58,8 +60,8 @@ public class FifaWorldCupScoreBoard
 
     @Override
     public void endGame(String homeTeamName, String awayTeamName) throws GameException, ScoreBoardException {
-        final String formatedHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeamName);
-        final String formatedAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeamName);
+        final String formatedHomeTeamName = gameTeamNameProcessor.validateAndFormatTeamName(homeTeamName);
+        final String formatedAwayTeamName = gameTeamNameProcessor.validateAndFormatTeamName(awayTeamName);
 
         final String key = scoreBoardKeyGenerator(formatedHomeTeamName, formatedAwayTeamName);
         FootballGame footballGame = Optional.ofNullable(scoreBoard.get(key)).orElseThrow(() -> new ScoreBoardException("No game found with the provided team names"));

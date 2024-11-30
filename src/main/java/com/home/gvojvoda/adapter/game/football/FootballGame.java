@@ -2,7 +2,7 @@ package com.home.gvojvoda.adapter.game.football;
 
 import com.home.gvojvoda.domain.exception.GameException;
 import com.home.gvojvoda.domain.port.Game;
-import com.home.gvojvoda.domain.util.GameTeamNameUtil;
+import com.home.gvojvoda.domain.util.GameTeamNameProcessor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -18,9 +18,11 @@ public class FootballGame implements Game<FootballGameScore> {
     private int awayScore;
     private boolean finish;
 
+    private final GameTeamNameProcessor gameTeamNameProcessor = new GameTeamNameProcessor();
+
     public FootballGame(String homeTeam, String awayTeam) throws GameException {
-        String finalHomeTeamName = GameTeamNameUtil.validateAndFormatTeamName(homeTeam);
-        String finalAwayTeamName = GameTeamNameUtil.validateAndFormatTeamName(awayTeam);
+        String finalHomeTeamName = gameTeamNameProcessor.validateAndFormatTeamName(homeTeam);
+        String finalAwayTeamName = gameTeamNameProcessor.validateAndFormatTeamName(awayTeam);
         if (finalHomeTeamName.equals(finalAwayTeamName)) throw new GameException("Team names cannot be equal");
         this.matchStart = LocalDateTime.now();
         this.homeTeamName = finalHomeTeamName;
